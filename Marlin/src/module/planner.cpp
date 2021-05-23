@@ -106,6 +106,10 @@
   #include "../feature/powerloss.h"
 #endif
 
+#if ENABLED(MSU)
+  #include "../feature/msu/msu.h"
+#endif
+
 #if HAS_CUTTER
   #include "../feature/spindle_laser.h"
 #endif
@@ -1925,12 +1929,16 @@ bool Planner::_populate_block(
   #if EITHER(PREVENT_COLD_EXTRUSION, PREVENT_LENGTHY_EXTRUDE)
     if (de) {
       #if ENABLED(PREVENT_COLD_EXTRUSION)
-        if (thermalManager.tooColdToExtrude(extruder)) {
-          position.e = target.e; // Behave as if the move really took place, but ignore E part
-          TERN_(HAS_POSITION_FLOAT, position_float.e = target_float.e);
-          de = 0; // no difference
-          SERIAL_ECHO_MSG(STR_ERR_COLD_EXTRUDE_STOP);
-        }
+        #if DISABLED(MSU)
+        
+            if (thermalManager.tooColdToExtrude(extruder)) {
+              position.e = target.e; // Behave as if the move really took place, but ignore E part
+              TERN_(HAS_POSITION_FLOAT, position_float.e = target_float.e);
+              de = 0; // no difference
+              SERIAL_ECHO_MSG(STR_ERR_COLD_EXTRUDE_STOP);
+            }
+       
+        #endif
       #endif // PREVENT_COLD_EXTRUSION
       #if ENABLED(PREVENT_LENGTHY_EXTRUDE)
         const float e_steps = ABS(de * e_factor[extruder]);

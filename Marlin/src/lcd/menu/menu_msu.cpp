@@ -44,63 +44,12 @@ void menu_msu_set_idler_position() {
   END_MENU();
 }
 
-/*void menu_msu_adjust_bowden_length(){
-  ui.defer_status_screen();//prevent timeout due to no input during the move
-  msu.move_extruder(msu.get_MSU_BOWDEN_TUBE_SETUP_length()+30,MSU_EXTRUDER_ENBR,10);
-  if (ui.use_click())
-    ui.goto_screen(menu_msu);
-  if (ui.encoderPosition)
-  {
-    if (!ui.manual_move.processing)
-    {
-      const float diff = float(int32_t(ui.encoderPosition)) * ui.manual_move.menu_scale;
-      msu.edit_MSU_BOWDEN_TUBE_SETUP_length(diff);
-      msu.move_extruder(diff,MSU_EXTRUDER_ENBR,10);
-      ui.refresh(LCDVIEW_REDRAW_NOW);
-    }
-    ui.encoderPosition = 0;
-  }
-  if (ui.should_draw())
-  {
-    MenuEditItemBase::draw_edit_screen(
-        GET_TEXT(MSG_MSU_MSU_BOWDEN_LENGHT),
-        ftostr41sign(msu.get_MSU_BOWDEN_TUBE_SETUP_length()));
-  }
-}*/
-
-void menu_msu_move_extruder()
-{
-  if (ui.use_click())
-    ui.goto_screen(menu_msu_adjust_bowden_length);
-  if (ui.encoderPosition)
-  {
-    if (!ui.manual_move.processing)
-    {
-      const float diff = float(int32_t(ui.encoderPosition)) * ui.manual_move.menu_scale;
-      TERN(IS_KINEMATIC, ui.manual_move.offset, current_position.e) += diff;
-      ui.manual_move.soon(E_AXIS);
-      ui.refresh(LCDVIEW_REDRAW_NOW);
-    }
-    ui.encoderPosition = 0;
-  }
-  if (ui.should_draw())
-  {
-    MenuEditItemBase::draw_edit_screen(
-        GET_TEXT(MSG_MOVE_E),
-        ftostr41sign(current_position.e));
-  }
-  
-}
-
 void menu_msu() {
   START_MENU();
   BACK_ITEM(MSG_MAIN);
   ACTION_ITEM(MSG_MSU_IDLER_PARK_IDLER, []{ msu.idler_select_filament_nbr(-1); });
   SUBMENU(MSG_MSU_SELECT_FILAMENT, menu_msu_change_filament);
   SUBMENU(MSG_MSU_SET_IDLER_POSITION, menu_msu_set_idler_position);
-  
-
-  //SUBMENU(MSG_MSU_CALIBRATE_TUBE_LENGHT,menu_msu_move_extruder); // still to unstable to be included in the main release but will keep working on it in the LCDMenu branch
   END_MENU();
 }
 

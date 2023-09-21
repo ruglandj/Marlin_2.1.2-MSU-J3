@@ -73,9 +73,9 @@ void MSUMP::move_extruder(float dist, const_feedRate_t speed, int extruder_nbr)
 void MSUMP::idler_select_filament_nbr(int index)
 {
   if (index == -1)
-    servo[MSU_SERVO_IDLER_NBR].move(MSU_SERVO_IDLER_NBR, 270);
+    servo[MSU_SERVO_IDLER_NBR].move(270);
   else
-    servo[MSU_SERVO_IDLER_NBR].move(MSU_SERVO_IDLER_NBR, MSU_SERVO_OFFSET + (index + 1) * MSU_BEARING_ANGLES);
+    servo[MSU_SERVO_IDLER_NBR].move(MSU_SERVO_OFFSET + (index + 1) * MSU_BEARING_ANGLES);
 }
 
 #endif
